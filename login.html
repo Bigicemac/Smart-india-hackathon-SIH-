@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In — Macwatis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #09090b;
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      -webkit-font-smoothing: antialiased;
+      background-image: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(255,255,255,0.04) 0%, transparent 70%);
+    }
+
+    /* ── Top bar ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 58px;
+      background: #0d0d10;
+      border-bottom: 1px solid #27272a;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      z-index: 100;
+    }
+
+    .brand { display: flex; align-items: center; gap: 0.6rem; text-decoration: none; color: #fff; }
+    .brand-icon { width: 30px; height: 30px; background: #fff; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; font-weight: 800; color: #000; }
+    .brand-name { font-size: 0.95rem; font-weight: 700; }
+    .brand-sub  { font-size: 0.68rem; color: #71717a; }
+
+    .back-btn {
+      font-size: 0.78rem; font-weight: 500;
+      color: #a1a1aa; text-decoration: none;
+      border: 1px solid #27272a; padding: 0.35rem 0.85rem;
+      border-radius: 999px; background: #18181c;
+      transition: all 0.15s;
+    }
+    .back-btn:hover { color: #fff; border-color: #3f3f46; background: #27272a; }
+
+    /* ── Card ── */
+    .wrap {
+      margin-top: 58px;
+      display: flex; align-items: center; justify-content: center;
+      width: 100%; padding: 2.5rem 1rem;
+    }
+
+    .card {
+      width: 100%; max-width: 400px;
+      background: #111114;
+      border: 1px solid #27272a;
+      border-radius: 20px;
+      padding: 2.4rem 2.1rem 2rem;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 24px 60px rgba(0,0,0,0.7);
+      position: relative; overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute; top: -50px; left: 50%;
+      transform: translateX(-50%);
+      width: 200px; height: 100px;
+      background: radial-gradient(ellipse, rgba(255,255,255,0.05) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    /* ── Animated logo ── */
+    .logo-wrap { display: flex; justify-content: center; margin-bottom: 1.4rem; }
+    .logo {
+      width: 56px; height: 56px;
+      border-radius: 50%;
+      background: #0d0d10;
+      border: 1.5px solid #2a2a35;
+      display: flex; align-items: center; justify-content: center;
+      position: relative;
+      box-shadow: 0 0 0 8px rgba(255,255,255,0.02), 0 0 0 16px rgba(255,255,255,0.008);
+    }
+    .logo::after {
+      content: '';
+      position: absolute; inset: -4px;
+      border-radius: 50%;
+      border: 1.5px solid transparent;
+      border-top-color: rgba(255,255,255,0.45);
+      border-right-color: rgba(255,255,255,0.12);
+      animation: spin 3s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .logo span { font-size: 1.3rem; font-weight: 800; color: #fff; position: relative; z-index: 1; }
+
+    /* ── Headings ── */
+    h1 { text-align: center; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; margin-bottom: 0.3rem; }
+    .sub { text-align: center; font-size: 0.81rem; color: #a1a1aa; margin-bottom: 1.6rem; }
+    .sub a { color: #fff; font-weight: 600; text-decoration: none; border-bottom: 1px solid rgba(255,255,255,0.3); }
+    .sub a:hover { border-bottom-color: #fff; }
+
+    /* ── Views ── */
+    .view { display: none; }
+    .view.active { display: block; animation: up 0.2s ease both; }
+    @keyframes up { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* ── Alert banners ── */
+    .alert {
+      display: none;
+      font-size: 0.79rem; font-weight: 500;
+      padding: 0.55rem 0.8rem;
+      border-radius: 9px;
+      margin-bottom: 1rem;
+    }
+    .alert.error   { display: block; background: rgba(239,68,68,0.12);  border: 1px solid rgba(239,68,68,0.3);  color: #f87171; }
+    .alert.success { display: block; background: rgba(16,185,129,0.1);  border: 1px solid rgba(16,185,129,0.3); color: #34d399; }
+
+    /* ── Inputs ── */
+    .field { position: relative; margin-bottom: 0.7rem; }
+    .f-icon {
+      position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%);
+      width: 15px; height: 15px; color: #71717a; pointer-events: none;
+    }
+    input[type=text], input[type=password], input[type=email] {
+      width: 100%;
+      padding: 0.72rem 2.45rem 0.72rem 2.45rem;
+      background: #18181c;
+      border: 1px solid #27272a;
+      border-radius: 9px;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.84rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+      caret-color: #fff;
+    }
+    input::placeholder { color: #52525b; }
+    input:focus { border-color: rgba(255,255,255,0.4); box-shadow: 0 0 0 3px rgba(255,255,255,0.05); }
+
+    .eye {
+      position: absolute; right: 0.8rem; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer; color: #52525b;
+      padding: 0; line-height: 1; transition: color 0.15s;
+    }
+    .eye:hover { color: #a1a1aa; }
+
+    /* Two-column row */
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0.65rem; margin-bottom: 0.7rem; }
+    select {
+      width: 100%; padding: 0.72rem 0.75rem;
+      background: #18181c; border: 1px solid #27272a; border-radius: 9px;
+      color: #fff; font-family: 'Inter', sans-serif; font-size: 0.82rem;
+      outline: none; appearance: none; cursor: pointer;
+    }
+    select:focus { border-color: rgba(255,255,255,0.4); }
+    select option { background: #18181c; }
+
+    /* Forgot */
+    .forgot-row { display: flex; justify-content: flex-end; margin: -0.1rem 0 1.1rem; }
+    .forgot { font-size: 0.74rem; color: #a1a1aa; text-decoration: none; transition: color 0.15s; }
+    .forgot:hover { color: #fff; }
+
+    /* ── Button ── */
+    .btn {
+      width: 100%; padding: 0.74rem;
+      background: #fff; color: #000;
+      border: none; border-radius: 9px;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.87rem; font-weight: 600;
+      cursor: pointer; letter-spacing: -0.01em;
+      transition: background 0.15s, transform 0.1s;
+      position: relative; overflow: hidden;
+    }
+    .btn:hover { background: #e4e4e7; }
+    .btn:active { transform: scale(0.988); }
+    .btn::after {
+      content: ''; position: absolute; inset: 0;
+      background: linear-gradient(105deg, transparent 35%, rgba(255,255,255,0.3) 50%, transparent 65%);
+      transform: translateX(-100%); transition: transform 0.5s;
+    }
+    .btn:hover::after { transform: translateX(100%); }
+
+    /* ── Footer ── */
+    .footer { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px solid #1c1c20; text-align: center; font-size: 0.68rem; color: #52525b; }
+
+    /* ── Toast ── */
+    #toasts { position: fixed; bottom: 1.5rem; right: 1.5rem; display: flex; flex-direction: column; gap: 0.5rem; z-index: 999; }
+    .toast {
+      background: #18181c; border: 1px solid #27272a; color: #fff;
+      font-size: 0.79rem; font-weight: 500; padding: 0.6rem 1rem;
+      border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+      animation: toastIn 0.2s ease both; transition: opacity 0.2s, transform 0.2s;
+    }
+    @keyframes toastIn { from { opacity: 0; transform: translateX(14px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes shake {
+      0%,100% { transform: translateX(0); }
+      20% { transform: translateX(-7px); }
+      40% { transform: translateX(7px); }
+      60% { transform: translateX(-4px); }
+      80% { transform: translateX(4px); }
+    }
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: #09090b; }
+    ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 9px; }
+  </style>
+</head>
+<body>
+
+  <!-- Top nav -->
+  <nav>
+    <a href="./index.html" class="brand">
+      <div class="brand-icon">M</div>
+      <div>
+        <div class="brand-name">Macwatis</div>
+        <div class="brand-sub">Placement Intelligence • SIH 2026</div>
+      </div>
+    </a>
+    <a href="./index.html" class="back-btn">← Dashboard</a>
+  </nav>
+
+  <div class="wrap">
+    <div class="card">
+
+      <!-- Logo -->
+      <div class="logo-wrap">
+        <div class="logo"><span>M</span></div>
+      </div>
+
+      <!-- Title / subtitle (dynamic) -->
+      <h1 id="title">Welcome Back</h1>
+      <p class="sub" id="sub">
+        Don't have an account? <a href="#" onclick="show('register'); return false;">Sign up</a>
+      </p>
+
+      <!-- ════════ SIGN IN ════════ -->
+      <div id="view-signin" class="view active">
+
+        <!-- Alert banner -->
+        <div class="alert" id="si-alert"></div>
+
+        <form onsubmit="doSignIn(event)">
+          <!-- Email / Roll No -->
+          <div class="field">
+            <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="text" id="si-id" placeholder="email or roll number" autocomplete="username">
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="si-pw" placeholder="password" autocomplete="current-password">
+            <button type="button" class="eye" onclick="eyeToggle('si-pw',this)" tabindex="-1">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+
+          <div class="forgot-row">
+            <a href="#" class="forgot" onclick="showToast('Password reset coming soon'); return false;">Forgot password?</a>
+          </div>
+
+          <button type="submit" class="btn">Login</button>
+        </form>
+      </div>
+
+      <!-- ════════ REGISTER ════════ -->
+      <div id="view-register" class="view">
+
+        <!-- Alert banner -->
+        <div class="alert" id="reg-alert"></div>
+
+        <form onsubmit="doRegister(event)" autocomplete="off">
+          <!-- Name + Roll -->
+          <div class="row2">
+            <div class="field" style="margin-bottom:0">
+              <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <input type="text" id="reg-name" placeholder="Full name" required>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><path d="M9 9h6M9 12h6M9 15h4"/></svg>
+              <input type="text" id="reg-roll" placeholder="Roll no." required>
+            </div>
+          </div>
+
+          <!-- Branch + Batch -->
+          <div class="row2">
+            <select id="reg-branch">
+              <option value="Computer Science (CSE)">CSE</option>
+              <option value="Information Tech (IT)">IT</option>
+              <option value="Electronics (ECE)">ECE</option>
+              <option value="Mechanical / Chemical">Mech / Chem</option>
+            </select>
+            <select id="reg-batch">
+              <option value="2026 Batch">2026 Batch</option>
+              <option value="2025 Batch">2025 Batch</option>
+              <option value="2027 Batch">2027 Batch</option>
+            </select>
+          </div>
+
+          <!-- Email -->
+          <div class="field">
+            <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
+            <input type="email" id="reg-email" placeholder="email (optional)">
+          </div>
+
+          <!-- Password -->
+          <div class="field">
+            <svg class="f-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <input type="password" id="reg-pw" placeholder="create password" required autocomplete="new-password">
+            <button type="button" class="eye" onclick="eyeToggle('reg-pw',this)" tabindex="-1">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+          </div>
+
+          <button type="submit" class="btn" style="margin-top:0.2rem">Create Account</button>
+        </form>
+      </div>
+
+      <div class="footer">Protected by Zero-PII Anonymization &bull; Team Macwatis NITK</div>
+    </div>
+  </div>
+
+  <div id="toasts"></div>
+  <script src="./login.js"></script>
+</body>
+</html>

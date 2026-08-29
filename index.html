@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Macwatis — Placement Knowledge Intelligence Platform | SIH 2026</title>
+  <meta name="description" content="Macwatis - Securely aggregate anonymized placement experiences, company-specific preparation patterns, skill gap radar diagnostics, and recurring OA topics.">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Chart.js for Interactive Visualizations -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="./systel.css">
+</head>
+<body>
+
+  <div class="app-container">
+
+    <!-- ==========================================================================
+         1. LEFT SIDEBAR NAVIGATION
+         ========================================================================== -->
+    <aside class="sidebar">
+      
+      <!-- Brand Logo -->
+      <a href="#" class="brand-header" onclick="switchView('view-home')">
+        <div class="brand-icon-wrap">M</div>
+        <div class="brand-text">
+          <h1>Macwatis</h1>
+          <p>Placement Intelligence</p>
+        </div>
+      </a>
+
+      <!-- Main Navigation Menu -->
+      <ul class="nav-menu">
+        <li>
+          <button class="nav-item-btn active" data-view="view-home" onclick="switchView('view-home')">
+            <i data-lucide="home"></i>
+            <span>Home</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-mock" onclick="switchView('view-mock')">
+            <i data-lucide="message-square"></i>
+            <span>Mock Q&A</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-experiences" onclick="switchView('view-experiences')">
+            <i data-lucide="file-text"></i>
+            <span>Interview Experiences</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-companies" onclick="switchView('view-companies')">
+            <i data-lucide="building-2"></i>
+            <span>Companies</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-salary" onclick="switchView('view-salary')">
+            <i data-lucide="indian-rupee"></i>
+            <span>Salary Insights</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-predictor" onclick="switchView('view-predictor')">
+            <i data-lucide="trending-up"></i>
+            <span>Placement Predictor</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-resume" onclick="switchView('view-resume')">
+            <i data-lucide="file-check"></i>
+            <span>Resume Review</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-resources" onclick="switchView('view-resources')">
+            <i data-lucide="book-open"></i>
+            <span>Resources</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-discussion" onclick="switchView('view-discussion')">
+            <i data-lucide="messages-square"></i>
+            <span>Discussion Feed</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-saved" onclick="switchView('view-saved')">
+            <i data-lucide="bookmark"></i>
+            <span>Saved</span>
+          </button>
+        </li>
+
+        <li class="nav-divider"></li>
+
+        <li>
+          <button class="nav-item-btn" data-view="view-leaderboard" onclick="switchView('view-leaderboard')">
+            <i data-lucide="trophy"></i>
+            <span>Leaderboard</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-item-btn" data-view="view-achievements" onclick="switchView('view-achievements')">
+            <i data-lucide="medal"></i>
+            <span>Achievements</span>
+          </button>
+        </li>
+        <li>
+          <a href="./login.html" class="nav-item-btn" style="text-decoration: none;">
+            <i data-lucide="log-in"></i>
+            <span>Sign In / Switch User</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- Sidebar Bottom Progress Widget -->
+      <div class="sidebar-bottom-widget">
+        <div class="readiness-mini-card">
+          <div class="mini-card-title">Your Placement Readiness</div>
+          <div class="radial-progress-wrap">
+            <div class="radial-progress-circle" id="sidebarProgressCircle">
+              <div class="radial-progress-inner" id="sidebarReadinessVal">72%</div>
+            </div>
+            <div class="radial-progress-text">
+              <h4 id="sidebarReadinessTitle">Good Progress</h4>
+              <p>Keep practicing and sharing to improve your score.</p>
+            </div>
+          </div>
+          <button class="btn-view-report" onclick="switchView('view-predictor')">
+            View Full Report &rarr;
+          </button>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- ==========================================================================
+         2. MAIN CONTENT AREA (Header + Center Feed + Right Sidebar)
+         ========================================================================== -->
+    <main class="main-layout">
+      
+      <!-- Top Application Header -->
+      <header class="top-header">
+        
+        <!-- Search Bar -->
+        <div class="header-search-bar">
+          <i data-lucide="search"></i>
+          <input type="text" id="globalAppSearch" placeholder="Search for companies, roles, questions, users..." onkeydown="handleSearchKey(event)">
+        </div>
+
+        <!-- Header Right Actions -->
+        <div class="header-right-actions">
+          <button class="header-action-btn" onclick="showToast('Campus Placement News: 14 New Drives this week')">
+            <i data-lucide="newspaper"></i>
+            <span>News</span>
+          </button>
+
+          <button class="header-action-btn" onclick="showToast('NITK Connection Hub: 420 active batchmates')">
+            <i data-lucide="users"></i>
+            <span>Connections</span>
+          </button>
+
+          <!-- User Profile Dropdown Button -->
+          <div class="user-profile-btn" onclick="toggleUserDropdown(event)">
+            <img id="navUserAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="User" class="user-avatar-img">
+            <span class="user-name-text" id="navUserName">Jaiwant</span>
+            <i data-lucide="chevron-down" style="width: 14px; height: 14px; color: var(--text-muted);"></i>
+          </div>
+
+          <!-- User Popover Menu -->
+          <div class="user-dropdown-menu" id="userDropdownMenu">
+            <div class="user-dropdown-header">
+              <h4 id="dropdownFullName">Jaiwant</h4>
+              <p id="dropdownMeta">NITK CSE 2026 • 211CS142</p>
+            </div>
+            <a href="./login.html" class="user-dropdown-item">
+              <i data-lucide="users"></i>
+              <span>Switch User Account</span>
+            </a>
+            <a href="./login.html" class="user-dropdown-item">
+              <i data-lucide="log-in"></i>
+              <span>Sign In / Register</span>
+            </a>
+            <div style="height: 1px; background: var(--border-color); margin: 0.25rem 0;"></div>
+            <a href="./login.html" class="user-dropdown-item" style="color: var(--accent-rose-text);">
+              <i data-lucide="log-out"></i>
+              <span>Sign Out</span>
+            </a>
+          </div>
+
+        </div>
+      </header>
+
+      <!-- ==========================================================================
+           3. VIEW 1: MAIN HOME DASHBOARD
+           ========================================================================== -->
+      <div id="view-home" class="view-panel active">
+        <div class="dashboard-grid">
+          
+          <!-- Center Content Column -->
+          <div class="center-content-col">
+            
+            <!-- Welcome Hero Card (Dynamic Per User) -->
+            <section class="welcome-hero-card">
+              <div class="welcome-text-side">
+                <div class="welcome-title-row">
+                  <h2 id="heroWelcomeName">Welcome back, Jaiwant</h2>
+                </div>
+                <p class="welcome-subtitle" id="heroSubtitle">Let's crack your dream placement together.</p>
+
+                <div class="readiness-score-block">
+                  <span class="readiness-score-label">Placement Readiness Score</span>
+                  <div class="readiness-score-number" id="heroScoreNum">72%</div>
+                  <div class="readiness-bar-track">
+                    <div class="readiness-bar-fill" id="heroScoreBar" style="width: 72%;"></div>
+                  </div>
+                  <p class="readiness-score-caption" id="heroScoreCaption">You're doing great. Keep it up.</p>
+                </div>
+              </div>
+
+              <!-- Predicted Badge & Minimal Icon -->
+              <div class="welcome-illustration-side">
+                <div class="predicted-badge-box">
+                  <span>Predicted Placement</span>
+                  <strong id="heroPredictedTier">Very High</strong>
+                  <p id="heroPredictedPercentile">Top 30%</p>
+                  <p style="font-size: 0.68rem; color: var(--text-muted); margin-top: 0.25rem;">Keep consistent to improve further</p>
+                </div>
+
+                <div class="hero-stats-icon-box">
+                  <i data-lucide="bar-chart-2"></i>
+                </div>
+              </div>
+            </section>
+
+            <!-- Personalized Company Recommendations -->
+            <section>
+              <div class="section-header-row">
+                <h3>Personalized Company Recommendations</h3>
+                <a class="view-all-link" onclick="switchView('view-companies')">View all</a>
+              </div>
+
+              <div class="company-cards-carousel" id="companyRecsContainer">
+                <!-- Dynamically Populated / Rendered -->
+              </div>
+            </section>
+
+            <!-- Community Feed Section -->
+            <section class="community-feed-section">
+              <div class="feed-header-bar">
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                  <h3 style="font-size: 1.05rem; font-weight: 700;">Community Feed</h3>
+                  <div class="feed-filter-tabs">
+                    <button class="feed-tab-btn active" onclick="filterFeed('for-you')">For You</button>
+                    <button class="feed-tab-btn" onclick="filterFeed('following')">Following</button>
+                    <button class="feed-tab-btn" onclick="filterFeed('trending')">Trending</button>
+                    <button class="feed-tab-btn" onclick="filterFeed('recent')">Recent</button>
+                  </div>
+                </div>
+
+                <button class="btn-share-exp" onclick="openShareModal()">
+                  <i data-lucide="plus" style="width: 15px; height: 15px;"></i>
+                  <span>Share Experience</span>
+                </button>
+              </div>
+
+              <!-- Posts Feed Container -->
+              <div class="feed-posts-list" id="communityPostsContainer">
+                <!-- Dynamically Rendered from MongoDB / LocalStore -->
+              </div>
+            </section>
+
+          </div>
+
+          <!-- Right Sidebar Column -->
+          <aside class="right-sidebar-col">
+            
+            <!-- Upcoming Interviews Widget -->
+            <div class="sidebar-widget-card">
+              <div class="widget-title-row">
+                <h3>Upcoming Interviews</h3>
+                <a class="view-all-link" onclick="showToast('All 3 upcoming interviews synced with calendar')">View all</a>
+              </div>
+
+              <div class="widget-items-list" id="upcomingInterviewsList">
+                <!-- Google -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #4285f4;">G</div>
+                    <div class="item-details">
+                      <h4>Google</h4>
+                      <p>SDE Intern Interview</p>
+                      <p style="font-size: 0.68rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                        <i data-lucide="calendar" style="width: 11px; height: 11px;"></i> 31 May, 2025 • 10:00 AM
+                      </p>
+                    </div>
+                  </div>
+                  <span class="time-pill-blue">1 Day Left</span>
+                </div>
+
+                <!-- Microsoft -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #00a4ef;">M</div>
+                    <div class="item-details">
+                      <h4>Microsoft</h4>
+                      <p>Final Round</p>
+                      <p style="font-size: 0.68rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                        <i data-lucide="calendar" style="width: 11px; height: 11px;"></i> 2 Jun, 2025 • 02:00 PM
+                      </p>
+                    </div>
+                  </div>
+                  <span class="time-pill-blue">3 Days Left</span>
+                </div>
+
+                <!-- Amazon -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #ff9900;">A</div>
+                    <div class="item-details">
+                      <h4>Amazon</h4>
+                      <p>Online Assessment</p>
+                      <p style="font-size: 0.68rem; color: var(--text-muted); display: flex; align-items: center; gap: 4px;">
+                        <i data-lucide="calendar" style="width: 11px; height: 11px;"></i> 5 Jun, 2025 • 11:00 AM
+                      </p>
+                    </div>
+                  </div>
+                  <span class="time-pill-blue">6 Days Left</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Deadlines Widget -->
+            <div class="sidebar-widget-card">
+              <div class="widget-title-row">
+                <h3>Deadlines</h3>
+                <a class="view-all-link" onclick="showToast('Viewing all 8 active campus deadlines')">View all</a>
+              </div>
+
+              <div class="widget-items-list">
+                <!-- Adobe -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #fa0f00;">A</div>
+                    <div class="item-details">
+                      <h4>Adobe Research Internship</h4>
+                      <p>Apply by 1 Jun, 2025</p>
+                    </div>
+                  </div>
+                  <span class="time-pill-red">1 Day Left</span>
+                </div>
+
+                <!-- Goldman Sachs -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #60a5fa;">GS</div>
+                    <div class="item-details">
+                      <h4>Goldman Sachs Summer Analyst</h4>
+                      <p>Apply by 5 Jun, 2025</p>
+                    </div>
+                  </div>
+                  <span class="time-pill-amber">5 Days Left</span>
+                </div>
+
+                <!-- JP Morgan -->
+                <div class="upcoming-item-row">
+                  <div class="item-left-meta">
+                    <div class="company-tiny-logo" style="color: #a1a1aa;">JM</div>
+                    <div class="item-details">
+                      <h4>JP Morgan Software Engineer</h4>
+                      <p>Apply by 10 Jun, 2025</p>
+                    </div>
+                  </div>
+                  <span class="time-pill-amber">10 Days Left</span>
+                </div>
+              </div>
+
+              <div style="text-align: center; margin-top: 0.65rem;">
+                <a class="view-all-link" style="font-size: 0.75rem;" onclick="showToast('Loading more deadlines...')">See more</a>
+              </div>
+            </div>
+
+            <!-- Share Promo Box (White Button) -->
+            <div class="share-promo-card">
+              <h3>Share Your Interview Experience</h3>
+              <p>Help the community by sharing your interview experience anonymously with live PII protection.</p>
+              <button class="btn-share-promo" onclick="openShareModal()">
+                <i data-lucide="edit-3" style="width: 15px; height: 15px;"></i>
+                <span>Share Now</span>
+              </button>
+            </div>
+
+            <!-- Recent Placement Updates -->
+            <div class="sidebar-widget-card">
+              <div class="widget-title-row">
+                <h3>Recent Placement Updates</h3>
+                <a class="view-all-link" onclick="showToast('Opening live campus placement feed')">View all</a>
+              </div>
+
+              <div class="widget-items-list">
+                <a href="#" class="update-item-link" onclick="showToast('Amazon SDE II offer details loaded')">
+                  <span class="update-headline">Amazon offered 52 LPA for SDE II role</span>
+                  <div class="update-meta-right">
+                    <span>2h ago</span>
+                    <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; color: var(--text-main);"></i>
+                  </div>
+                </a>
+
+                <a href="#" class="update-item-link" onclick="showToast('Google 2026 Batch notification loaded')">
+                  <span class="update-headline">Google hiring 2026 batch - Early openings</span>
+                  <div class="update-meta-right">
+                    <span>4h ago</span>
+                    <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; color: var(--text-main);"></i>
+                  </div>
+                </a>
+
+                <a href="#" class="update-item-link" onclick="showToast('Microsoft stipend details loaded')">
+                  <span class="update-headline">Microsoft increases internship stipend</span>
+                  <div class="update-meta-right">
+                    <span>6h ago</span>
+                    <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; color: var(--text-main);"></i>
+                  </div>
+                </a>
+
+                <a href="#" class="update-item-link" onclick="showToast('Adobe 1.26 CPA offer breakdown loaded')">
+                  <span class="update-headline">Highest package at Adobe: 1.26 CPA</span>
+                  <div class="update-meta-right">
+                    <span>8h ago</span>
+                    <i data-lucide="arrow-up-right" style="width: 14px; height: 14px; color: var(--text-main);"></i>
+                  </div>
+                </a>
+              </div>
+            </div>
+
+          </aside>
+
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           4. VIEW 2: PLACEMENT PREDICTOR & RADAR SKILL GAP
+           ========================================================================== -->
+      <div id="view-predictor" class="view-panel" style="padding: 1.5rem 2rem;">
+        <div style="background: var(--bg-card); border-radius: var(--radius-lg); border: 1px solid var(--border-color); padding: 1.75rem; box-shadow: var(--shadow-card);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <span class="match-pill match-high">AI Diagnostic Engine</span>
+              <h2 style="font-size: 1.5rem; font-weight: 700; margin-top: 0.35rem; color: #ffffff;">Placement Predictor & Skill Gap Radar</h2>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Benchmark your skills against successful candidates for target recruiters.</p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+              <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-secondary);">Target Recruiter:</label>
+              <select id="predictorCompanySelect" onchange="updatePredictorBenchmark()" style="padding: 0.5rem 0.85rem; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: #18181c; color: #ffffff; font-family: var(--font-main); font-size: 0.84rem;">
+                <option value="amazon">Amazon (SDE-1)</option>
+                <option value="google">Google (SWE)</option>
+                <option value="microsoft">Microsoft (SDE)</option>
+                <option value="goldmansachs">Goldman Sachs (Quant/Tech)</option>
+                <option value="deshaw">D. E. Shaw (Member Technical)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem;">
+            <!-- Sliders -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+              <h3 style="font-size: 1rem; font-weight: 700; color: var(--text-main);">Adjust Your Current Proficiencies</h3>
+              
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>Data Structures & Algorithms</span>
+                  <span id="sliderDsaVal" style="color: #ffffff; font-family: var(--font-mono);">75%</span>
+                </div>
+                <input type="range" id="predDsa" min="20" max="100" value="75" oninput="calculatePredictor(true)" style="width: 100%;">
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>System Design & LLD</span>
+                  <span id="sliderSysVal" style="color: #ffffff; font-family: var(--font-mono);">65%</span>
+                </div>
+                <input type="range" id="predSys" min="20" max="100" value="65" oninput="calculatePredictor(true)" style="width: 100%;">
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>DBMS & SQL Queries</span>
+                  <span id="sliderDbmsVal" style="color: #ffffff; font-family: var(--font-mono);">80%</span>
+                </div>
+                <input type="range" id="predDbms" min="20" max="100" value="80" oninput="calculatePredictor(true)" style="width: 100%;">
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>Operating Systems & Concurrency</span>
+                  <span id="sliderOsVal" style="color: #ffffff; font-family: var(--font-mono);">70%</span>
+                </div>
+                <input type="range" id="predOs" min="20" max="100" value="70" oninput="calculatePredictor(true)" style="width: 100%;">
+              </div>
+
+              <div>
+                <div style="display: flex; justify-content: space-between; font-size: 0.82rem; font-weight: 600; margin-bottom: 0.25rem;">
+                  <span>Computer Networks</span>
+                  <span id="sliderCnVal" style="color: #ffffff; font-family: var(--font-mono);">60%</span>
+                </div>
+                <input type="range" id="predCn" min="20" max="100" value="60" oninput="calculatePredictor(true)" style="width: 100%;">
+              </div>
+            </div>
+
+            <!-- Radar Chart -->
+            <div style="background: #111115; border-radius: var(--radius-md); padding: 1.25rem; border: 1px solid var(--border-color); display: flex; flex-direction: column; align-items: center;">
+              <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--text-main);">Candidate vs. Recruiter Benchmark</h3>
+              <div style="position: relative; height: 280px; width: 100%;">
+                <canvas id="predictorRadarChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           5. VIEW 3: COMPANIES INTELLIGENCE HUB
+           ========================================================================== -->
+      <div id="view-companies" class="view-panel" style="padding: 1.5rem 2rem;">
+        <div class="company-hub-grid">
+          <div class="company-sidebar-list" id="companyHubList">
+            <!-- Dynamically Populated -->
+          </div>
+
+          <div style="background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 1.75rem; box-shadow: var(--shadow-card);" id="companyDossierCard">
+            <!-- Dynamically Populated -->
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================================================
+           6. VIEW 4: MOCK Q&A & QUESTION VAULT
+           ========================================================================== -->
+      <div id="view-mock" class="view-panel" style="padding: 1.5rem 2rem;">
+        <div style="background: var(--bg-card); border-radius: var(--radius-md); border: 1px solid var(--border-color); padding: 1.75rem; box-shadow: var(--shadow-card);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <div>
+              <h2 style="font-size: 1.4rem; font-weight: 700; color: #ffffff;">Mock Q&A & Recurring OA Question Bank</h2>
+              <p style="font-size: 0.85rem; color: var(--text-secondary);">Real questions asked in 2025/2026 campus placement drives with verified solutions.</p>
+            </div>
+            <span class="match-pill match-high">3,800+ Questions Indexed</span>
+          </div>
+
+          <div id="mockQuestionsGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(360px, 1fr)); gap: 1.25rem;">
+            <!-- Dynamically Populated -->
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+  </div>
+
+  <!-- ==========================================================================
+       SHARE EXPERIENCE MODAL WITH REAL-TIME PII SCRUBBER
+       ========================================================================== -->
+  <div class="modal-overlay" id="shareModalOverlay">
+    <div class="modal-box">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+        <div>
+          <span class="match-pill match-high" style="margin-bottom: 0.25rem;">Zero-PII Privacy Guaranteed</span>
+          <h3 style="font-size: 1.25rem; font-weight: 700; color: #ffffff;">Share Your Placement Experience</h3>
+        </div>
+        <button onclick="closeShareModal()" style="background: transparent; border: none; font-size: 1.4rem; cursor: pointer; color: var(--text-muted);">&times;</button>
+      </div>
+
+      <form id="shareExpForm" onsubmit="handleExperiencePublish(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Company</label>
+            <input type="text" id="shareCompany" placeholder="Google, Amazon, Microsoft" required style="width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #18181c; color: #ffffff;">
+          </div>
+          <div>
+            <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 0.35rem;">Role Offered</label>
+            <input type="text" id="shareRole" placeholder="SDE Intern, SWE-1" required style="width: 100%; padding: 0.55rem 0.8rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #18181c; color: #ffffff;">
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-main); display: block; margin-bottom: 0.35rem;">
+            Detailed Experience & Rounds
+            <span style="color: #ffffff; font-size: 0.75rem; font-weight: 500;">(Live PII Redactor active)</span>
+          </label>
+          <textarea id="shareTextarea" rows="5" oninput="handlePiiLiveScrub()" placeholder="Describe the rounds, questions, and tips. Names, phone numbers, and roll numbers are automatically redacted..." required style="width: 100%; padding: 0.75rem; border: 1px solid var(--border-color); border-radius: var(--radius-sm); background: #18181c; color: #ffffff; font-family: var(--font-main); font-size: 0.84rem;"></textarea>
+        </div>
+
+        <!-- Live Redacted Preview -->
+        <div style="background: #111115; border: 1px solid var(--border-color); border-radius: var(--radius-sm); padding: 0.85rem;">
+          <div style="display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem;">
+            <span>LIVE REDACTED PREVIEW (PUBLIC VIEW)</span>
+            <span id="piiScrubCount" style="color: var(--accent-rose-text);">0 entities redacted</span>
+          </div>
+          <div id="piiLiveOutput" style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; min-height: 48px;">
+            Start typing above to see real-time PII anonymization...
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 0.75rem; margin-top: 0.5rem;">
+          <button type="button" onclick="closeShareModal()" style="padding: 0.55rem 1.15rem; background: #27272a; color: #ffffff; border: none; border-radius: var(--radius-sm); font-weight: 500; cursor: pointer;">Cancel</button>
+          <button type="submit" style="padding: 0.55rem 1.4rem; background: #ffffff; color: #000000; border: none; border-radius: var(--radius-sm); font-weight: 600; cursor: pointer;">Publish Anonymously</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-wrap" id="appToastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="./Index.js"></script>
+</body>
+</html>
